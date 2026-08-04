@@ -1,0 +1,30 @@
+/* ============================================================
+ * 暗色主题配色变量（与提示词 8.1 配色方案一致）
+ * ============================================================ */
+:root {
+  /* 背景与卡片 */
+  --bg-primary: #1a1a2e;
+  --bg-card: #16213e;
+  --bg-elevated: #1f2b4d;
+  --border-color: #2a3a5e;
+  --border-hover: #3d5a8f;
+
+  /* 文本 */
+  --text-primary: #e8e8e8;
+  --text-secondary: #8899bb;
+  --text-muted: #5f6f93;
+
+  /* 功能色 */
+  --color-before: #ff6b6b; /* 优化前主色（红） */
+  --color-after: #51cf66;  /* 优化后主色（绿） */
+  --color-accent: #4dabf7; /* 强调色 */
+  --color-warning: #fcc419; /* 警告 */
+
+  /* 控件 */
+  --input-bg: #0f1630;
+  --input-border: #2a3a5e;
+  --checkbox-accent: #4dabf7;
+
+  /* 字体 */
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, 'Courier New', monospace;
+}

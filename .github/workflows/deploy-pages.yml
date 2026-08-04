@@ -1,0 +1,71 @@
+# 持续部署（CD）：构建并发布到 GitHub Pages
+#
+# 触发时机：push 到 main 分支
+#
+# 使用前需在仓库 Settings → Pages 中配置：
+# - Source 选择 "GitHub Actions"（由本 workflow 负责发布）
+#
+# 说明：vite.config.js 已设置 base: './'（相对路径），
+# 构建产物在 Pages 的子路径（如 /my-ai-code/）下也能正常加载资源。
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 支持手动触发
+
+# 并发控制：同一分支的旧部署自动取消
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 代码检查
+        run: npm run lint
+
+      - name: 生产构建
+        run: npm run build
+
+      - name: 上传 Pages 构建产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Pages 部署环境权限
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
